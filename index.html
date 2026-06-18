@@ -1,0 +1,2180 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diagnóstico VÉRTICE — Metodologia de Crescimento Empresarial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+/* ═══════════════════════════════════════════════
+   VÉRTICE — SISTEMA DE DESIGN
+   Paleta: Creme / Borgonha / Rosa Antigo / Marrom
+═══════════════════════════════════════════════ */
+:root {
+  --creme:       #F2EAE4;
+  --creme-dark:  #E8DDD5;
+  --borgonha:    #8B1A3A;
+  --borgonha-dk: #6A1229;
+  --borgonha-lt: #B04060;
+  --rosa:        #C49A9A;
+  --rosa-lt:     #DFC2C2;
+  --marrom:      #3D1A1A;
+  --marrom-lt:   #7A4A4A;
+  --branco:      #FDFAF8;
+  --sombra:      rgba(61,26,26,0.10);
+  --sombra-md:   rgba(61,26,26,0.18);
+
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body:    'Montserrat', system-ui, sans-serif;
+  --tracking-wide: 0.18em;
+  --tracking-xl:   0.28em;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--creme);
+  color: var(--marrom);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+/* ─── LAYOUT ─────────────────────────────────── */
+.page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+
+/* ─── HEADER ─────────────────────────────────── */
+.app-header {
+  text-align: center;
+  padding: 2.5rem 0 2rem;
+  position: relative;
+}
+
+.logo-v {
+  width: 54px;
+  height: 54px;
+  margin: 0 auto 1.25rem;
+  position: relative;
+}
+
+.logo-v svg { width: 100%; height: 100%; }
+
+.brand-name {
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  font-weight: 300;
+  letter-spacing: var(--tracking-xl);
+  color: var(--borgonha);
+  line-height: 1;
+  margin-bottom: 0.4rem;
+}
+
+.brand-divider {
+  width: 48px;
+  height: 1px;
+  background: var(--rosa);
+  margin: 0.6rem auto;
+}
+
+.brand-sub {
+  font-family: var(--font-body);
+  font-size: 10px;
+  letter-spacing: var(--tracking-xl);
+  color: var(--rosa);
+  text-transform: uppercase;
+  font-weight: 400;
+}
+
+/* ─── PROGRESS ───────────────────────────────── */
+.progress-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin: 0 0 2.5rem;
+}
+
+.prog-step {
+  flex: 1;
+  height: 2px;
+  background: var(--rosa-lt);
+  transition: background .4s ease;
+  position: relative;
+}
+
+.prog-step.done  { background: var(--borgonha); }
+.prog-step.active { background: linear-gradient(90deg, var(--borgonha), var(--rosa)); }
+
+.prog-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--rosa-lt);
+  border: 1.5px solid var(--creme);
+  position: absolute;
+  right: -3.5px;
+  top: -2.5px;
+  transition: background .4s ease;
+  z-index: 2;
+}
+
+.prog-step.done  .prog-dot { background: var(--borgonha); }
+.prog-step.active .prog-dot { background: var(--borgonha); }
+
+.prog-label {
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: var(--rosa);
+  text-transform: uppercase;
+  text-align: center;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+/* ─── STEP CARD ──────────────────────────────── */
+.step-card {
+  background: var(--branco);
+  border-radius: 2px;
+  border: 0.5px solid var(--rosa-lt);
+  padding: 2rem 2rem 1.5rem;
+  box-shadow: 0 4px 32px var(--sombra);
+  margin-bottom: 1rem;
+}
+
+.step-eyebrow {
+  font-size: 9px;
+  letter-spacing: var(--tracking-xl);
+  color: var(--rosa);
+  text-transform: uppercase;
+  font-weight: 500;
+  margin-bottom: 0.6rem;
+}
+
+.step-title {
+  font-family: var(--font-display);
+  font-size: 1.9rem;
+  font-weight: 400;
+  color: var(--borgonha);
+  line-height: 1.2;
+  margin-bottom: 0.4rem;
+}
+
+.step-desc {
+  font-size: 13px;
+  color: var(--marrom-lt);
+  margin-bottom: 1.75rem;
+  line-height: 1.65;
+}
+
+/* ─── FORM FIELDS ────────────────────────────── */
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 520px) { .field-row { grid-template-columns: 1fr; } }
+
+.field { margin-bottom: 1rem; }
+
+.field-label {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--marrom-lt);
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+select,
+textarea {
+  width: 100%;
+  padding: 10px 13px;
+  border: 1px solid var(--rosa-lt);
+  border-radius: 1px;
+  font-size: 13px;
+  font-family: var(--font-body);
+  font-weight: 300;
+  background: var(--creme);
+  color: var(--marrom);
+  transition: border-color .2s, box-shadow .2s;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%23C49A9A' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+  cursor: pointer;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--borgonha);
+  box-shadow: 0 0 0 3px rgba(139,26,58,0.07);
+  background: var(--branco);
+}
+
+textarea { resize: vertical; min-height: 84px; }
+
+/* ─── PILAR CARDS ────────────────────────────── */
+.pilar-card {
+  border: 1px solid var(--rosa-lt);
+  border-radius: 1px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 0.75rem;
+  background: var(--creme);
+  transition: border-color .2s, box-shadow .2s;
+}
+
+.pilar-card:hover { border-color: var(--rosa); box-shadow: 0 2px 12px var(--sombra); }
+
+.pilar-header { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 0.875rem; }
+
+.pilar-letter {
+  width: 32px; height: 32px;
+  border-radius: 1px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 500;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.pilar-info { flex: 1; }
+.pilar-name {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--borgonha);
+  letter-spacing: 0.05em;
+  line-height: 1.2;
+}
+.pilar-desc { font-size: 12px; color: var(--marrom-lt); margin-top: 2px; line-height: 1.5; }
+
+.slider-row { display: flex; align-items: center; gap: 10px; }
+.slider-lbl { font-size: 10px; color: var(--rosa); font-weight: 400; min-width: 10px; }
+
+input[type="range"] {
+  flex: 1;
+  -webkit-appearance: none;
+  height: 2px;
+  background: var(--rosa-lt);
+  border: none;
+  border-radius: 1px;
+  outline: none;
+  cursor: pointer;
+  padding: 0;
+  box-shadow: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--borgonha);
+  border: 2px solid var(--creme);
+  box-shadow: 0 1px 4px var(--sombra-md);
+  cursor: pointer;
+  transition: transform .15s;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+
+.slider-val {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--borgonha);
+  min-width: 28px;
+  text-align: right;
+}
+
+/* ─── BUTTONS ─────────────────────────────────── */
+.btn-row { display: flex; gap: 10px; margin-top: 1.75rem; justify-content: flex-end; align-items: center; }
+
+.btn-primary {
+  background: var(--borgonha);
+  color: var(--creme);
+  border: none;
+  padding: 11px 28px;
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background .2s, transform .1s;
+  border-radius: 1px;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+
+.btn-primary:hover { background: var(--borgonha-dk); }
+.btn-primary:active { transform: scale(0.98); }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--marrom-lt);
+  border: 1px solid var(--rosa-lt);
+  padding: 11px 20px;
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all .2s;
+  border-radius: 1px;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+
+.btn-ghost:hover { border-color: var(--borgonha); color: var(--borgonha); }
+
+/* ─── DIAGNOSTIC RESULTS ─────────────────────── */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 1.25rem;
+}
+@media (max-width: 480px) { .metrics-grid { grid-template-columns: repeat(2,1fr); } }
+
+.metric-box {
+  background: var(--creme);
+  border: 1px solid var(--rosa-lt);
+  border-radius: 1px;
+  padding: 0.875rem 0.75rem;
+  text-align: center;
+}
+
+.metric-num {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 400;
+  color: var(--borgonha);
+  line-height: 1;
+}
+
+.metric-lbl {
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--marrom-lt);
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+.chart-wrap {
+  background: var(--creme);
+  border: 1px solid var(--rosa-lt);
+  border-radius: 1px;
+  padding: 1.25rem;
+  margin-bottom: 1.25rem;
+  position: relative;
+}
+
+.chart-wrap canvas { width: 100% !important; height: 300px !important; }
+
+.bars-section { margin-top: 0.25rem; }
+
+.bar-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 8px 0;
+  border-bottom: 0.5px solid var(--rosa-lt);
+}
+.bar-row:last-child { border-bottom: none; }
+
+.bar-label {
+  font-size: 11px;
+  color: var(--marrom-lt);
+  min-width: 130px;
+  font-weight: 400;
+}
+.bar-label strong { color: var(--borgonha); font-weight: 500; }
+
+.bar-bg {
+  flex: 1;
+  height: 4px;
+  background: var(--rosa-lt);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.bar-fill { height: 4px; border-radius: 2px; transition: width .8s cubic-bezier(.4,0,.2,1); }
+
+.bar-score {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--borgonha);
+  min-width: 30px;
+  text-align: right;
+  font-weight: 500;
+}
+
+.bar-tag {
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 500;
+  min-width: 44px;
+  text-align: right;
+}
+
+/* ─── AI / LOADING ───────────────────────────── */
+.ai-block {
+  background: var(--creme);
+  border: 1px solid var(--rosa-lt);
+  border-radius: 1px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.ai-loading {
+  display: flex; align-items: center; gap: 12px;
+  color: var(--marrom-lt);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+}
+
+.dot-pulse { display: flex; gap: 5px; }
+.dot-pulse span {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--borgonha);
+  opacity: 0.3;
+  animation: dp 1.1s infinite;
+}
+.dot-pulse span:nth-child(2) { animation-delay: .18s; }
+.dot-pulse span:nth-child(3) { animation-delay: .36s; }
+@keyframes dp { 0%,80%,100%{opacity:.15;transform:scale(.75)} 40%{opacity:0.9;transform:scale(1)} }
+
+.ai-text {
+  font-size: 13px;
+  color: var(--marrom);
+  line-height: 1.8;
+  white-space: pre-wrap;
+  font-weight: 300;
+}
+
+/* ─── PRODUTO CARDS ──────────────────────────── */
+.product-rec {
+  border: 1px solid var(--rosa-lt);
+  border-radius: 1px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 0.75rem;
+  background: var(--branco);
+  transition: border-color .2s;
+}
+
+.product-rec.selected {
+  border-color: var(--borgonha) !important;
+  background: linear-gradient(135deg, var(--branco) 0%, #fdf5f0 100%);
+}
+
+.product-rec:hover {
+  border-color: var(--rosa);
+  box-shadow: 0 2px 12px var(--sombra);
+}
+
+.rec-badge {
+  display: inline-block;
+  background: var(--borgonha);
+  color: var(--creme);
+  font-size: 8px;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 1px;
+  margin-bottom: 8px;
+}
+
+.rec-name {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  color: var(--borgonha);
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+.rec-desc { font-size: 12px; color: var(--marrom-lt); line-height: 1.6; margin-bottom: 8px; }
+.rec-why { font-size: 11px; color: var(--borgonha-lt); font-style: italic; margin-bottom: 6px; }
+.rec-price {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--borgonha);
+  letter-spacing: 0.06em;
+}
+
+/* ─── PROPOSTA COMPLETA ──────────────────────── */
+.proposta-section { margin-bottom: 1.25rem; }
+
+.proposta-num {
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  font-weight: 300;
+  color: var(--rosa);
+  line-height: 1;
+  margin-bottom: 0.1rem;
+}
+
+.proposta-title {
+  font-size: 9px;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--borgonha);
+  font-weight: 600;
+  margin-bottom: 0.625rem;
+}
+
+.proposta-divider {
+  height: 1px;
+  background: linear-gradient(90deg, var(--borgonha), transparent);
+  margin-bottom: 0.75rem;
+}
+
+.proposta-content {
+  font-size: 13px;
+  color: var(--marrom);
+  line-height: 1.8;
+  white-space: pre-wrap;
+  font-weight: 300;
+}
+
+/* ─── SHARE BUTTONS ──────────────────────────── */
+.share-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  margin-top: 1.5rem;
+}
+@media (max-width: 480px) { .share-grid { grid-template-columns: 1fr; } }
+
+.share-btn {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 6px;
+  padding: 1rem;
+  border-radius: 1px;
+  font-family: var(--font-body);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all .2s;
+  border: 1px solid;
+  text-decoration: none;
+}
+
+.share-btn svg { width: 22px; height: 22px; }
+
+.share-btn.whatsapp {
+  background: #f0faf2;
+  border-color: #25D366;
+  color: #1a6e35;
+}
+.share-btn.whatsapp:hover { background: #25D366; color: white; }
+
+.share-btn.email {
+  background: var(--creme);
+  border-color: var(--borgonha);
+  color: var(--borgonha);
+}
+.share-btn.email:hover { background: var(--borgonha); color: var(--creme); }
+
+.share-btn.pdf {
+  background: var(--creme);
+  border-color: var(--rosa);
+  color: var(--marrom-lt);
+}
+.share-btn.pdf:hover { background: var(--marrom); border-color: var(--marrom); color: var(--creme); }
+
+.share-btn.link {
+  background: var(--creme);
+  border-color: var(--rosa-lt);
+  color: var(--marrom-lt);
+}
+.share-btn.link:hover { border-color: var(--borgonha); color: var(--borgonha); }
+
+.share-grid-4 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 10px;
+  margin-top: 1.5rem;
+}
+@media (max-width: 520px) { .share-grid-4 { grid-template-columns: 1fr 1fr; } }
+
+/* ─── DIVIDER ─────────────────────────────────── */
+.divider {
+  height: 1px;
+  background: var(--rosa-lt);
+  margin: 1.5rem 0;
+}
+
+.section-title {
+  font-size: 9px;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--borgonha);
+  font-weight: 600;
+  margin-bottom: 0.875rem;
+}
+
+/* ─── TOAST ──────────────────────────────────── */
+.toast {
+  position: fixed;
+  bottom: 2rem; left: 50%; transform: translateX(-50%);
+  background: var(--borgonha);
+  color: var(--creme);
+  padding: 10px 24px;
+  border-radius: 1px;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 500;
+  opacity: 0;
+  transition: opacity .3s;
+  z-index: 1000;
+  pointer-events: none;
+  white-space: nowrap;
+}
+.toast.show { opacity: 1; }
+
+/* ─── PRINT / PDF ─────────────────────────────── */
+#pdf-report {
+  display: none;
+  position: fixed;
+  top: -9999px; left: -9999px;
+  width: 794px;
+  background: var(--branco);
+  font-family: var(--font-body);
+}
+
+/* ─── UTILITY ─────────────────────────────────── */
+.hidden { display: none !important; }
+.txt-center { text-align: center; }
+.mt-1 { margin-top: 0.5rem; }
+.mt-2 { margin-top: 1rem; }
+</style>
+</head>
+<body>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- HEADER -->
+<div class="page">
+  <header class="app-header">
+    <button onclick="abrirModal()" title="Configurar consultor/closer" style="position:absolute;top:0;right:0;background:transparent;border:1px solid #DFC2C2;padding:7px 10px;border-radius:1px;cursor:pointer;display:flex;align-items:center;gap:6px;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#7A4A4A;font-family:'Montserrat',sans-serif;font-weight:500;transition:all .2s">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/></svg>
+      Closer
+    </button>
+    <div class="logo-v">
+      <svg viewBox="0 0 80 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M5 4L40 68L75 4H58L40 40L22 4H5Z" fill="#8B1A3A"/>
+        <path d="M22 4L40 40L58 4H22Z" fill="#6A1229" opacity="0.5"/>
+        <circle cx="40" cy="8" r="5" fill="#C49A9A"/>
+        <path d="M34 16L40 24L46 16H34Z" fill="#C49A9A" opacity="0.7"/>
+      </svg>
+    </div>
+    <div class="brand-name">VÉRTICE</div>
+    <div class="brand-divider"></div>
+    <div class="brand-sub">Metodologia de Crescimento Empresarial</div>
+  </header>
+
+  <!-- PROGRESS -->
+  <div style="margin-bottom:0.4rem">
+    <div class="prog-label" id="prog-label">Etapa 1 de 6 — Identificação</div>
+  </div>
+  <div class="progress-wrap" id="prog-wrap"></div>
+
+  <!-- ═══════════════════════════════════
+       ETAPA 1 — IDENTIFICAÇÃO
+  ═══════════════════════════════════ -->
+  <div id="step1">
+    <div class="step-card">
+      <div class="step-eyebrow">Etapa 01</div>
+      <h1 class="step-title">Quem é você<br>e sua empresa?</h1>
+      <p class="step-desc">Vamos personalizar cada detalhe do diagnóstico com base no seu perfil. Seja preciso — quanto mais dados, mais cirúrgica será a análise.</p>
+
+      <div class="field-row">
+        <div class="field">
+          <label class="field-label">Nome completo</label>
+          <input type="text" id="f_nome" placeholder="Ex: Carlos Mendes">
+        </div>
+        <div class="field">
+          <label class="field-label">Nome da empresa</label>
+          <input type="text" id="f_empresa" placeholder="Ex: Grupo Mendes">
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label class="field-label">E-mail</label>
+          <input type="email" id="f_email" placeholder="seu@email.com">
+        </div>
+        <div class="field">
+          <label class="field-label">WhatsApp</label>
+          <input type="tel" id="f_whats" placeholder="(11) 99999-9999">
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label class="field-label">Segmento / setor</label>
+          <input type="text" id="f_setor" placeholder="Ex: Varejo, Serviços, Saúde...">
+        </div>
+        <div class="field">
+          <label class="field-label">Faturamento mensal aproximado</label>
+          <select id="f_fat">
+            <option value="">Selecione</option>
+            <option>Até R$ 50 mil</option>
+            <option>R$ 50–150 mil</option>
+            <option>R$ 150–500 mil</option>
+            <option>R$ 500 mil–2 mi</option>
+            <option>Acima de R$ 2 mi</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label class="field-label">Número de colaboradores</label>
+          <select id="f_colab">
+            <option value="">Selecione</option>
+            <option>1–5</option>
+            <option>6–20</option>
+            <option>21–50</option>
+            <option>51–200</option>
+            <option>Mais de 200</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="field-label">Tempo de empresa</label>
+          <select id="f_tempo">
+            <option value="">Selecione</option>
+            <option>Menos de 1 ano</option>
+            <option>1–3 anos</option>
+            <option>3–10 anos</option>
+            <option>Mais de 10 anos</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label">Qual é o maior desafio do seu negócio hoje?</label>
+        <textarea id="f_desafio" placeholder="Descreva o principal obstáculo que enfrenta no momento..."></textarea>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-primary" onclick="goStep(2)">Iniciar diagnóstico →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════
+       ETAPA 2 — PILARES
+  ═══════════════════════════════════ -->
+  <div id="step2" class="hidden">
+    <div class="step-card">
+      <div class="step-eyebrow">Etapa 02</div>
+      <h1 class="step-title">Avalie os 7 pilares<br>VÉRTICE</h1>
+      <p class="step-desc">Dê uma nota de 1 a 10 para cada dimensão do seu negócio. Seja honesto — o diagnóstico só entrega valor com respostas reais.</p>
+      <div id="pilares-container"></div>
+      <div class="btn-row">
+        <button class="btn-ghost" onclick="goStep(1)">← Voltar</button>
+        <button class="btn-primary" onclick="goStep(3)">Próxima etapa →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════
+       ETAPA 3 — PERGUNTAS
+  ═══════════════════════════════════ -->
+  <div id="step3" class="hidden">
+    <div class="step-card">
+      <div class="step-eyebrow">Etapa 03</div>
+      <h1 class="step-title">Perguntas<br>estratégicas</h1>
+      <p class="step-desc">Estas respostas revelam padrões comportamentais e estruturais que os números não capturam.</p>
+
+      <div class="field">
+        <label class="field-label">Se você tirar 30 dias sem contato, o que acontece com a empresa?</label>
+        <select id="q1">
+          <option value="">Selecione</option>
+          <option>Para completamente — depende 100% de mim</option>
+          <option>Funciona com dificuldades e crises</option>
+          <option>Funciona, mas perde qualidade</option>
+          <option>Funciona bem com o time atual</option>
+          <option>Funciona melhor — o time é autônomo</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label class="field-label">Você prevê o faturamento do próximo mês com até 10% de margem?</label>
+        <select id="q2">
+          <option value="">Selecione</option>
+          <option>Não — não tenho previsibilidade</option>
+          <option>Às vezes, mas é muito incerto</option>
+          <option>Sim, com margem de 30–40%</option>
+          <option>Sim, com margem de 10–15%</option>
+          <option>Sim, com menos de 10% de variação</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label class="field-label">Quando foi o último produto ou serviço novo que você lançou?</label>
+        <select id="q3">
+          <option value="">Selecione</option>
+          <option>Nunca lançamos algo novo</option>
+          <option>Há mais de 2 anos</option>
+          <option>No último ano</option>
+          <option>Nos últimos 6 meses</option>
+          <option>Nos últimos 3 meses</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label class="field-label">Você tem plano estratégico documentado para os próximos 12 meses?</label>
+        <select id="q4">
+          <option value="">Selecione</option>
+          <option>Não tenho planejamento formal</option>
+          <option>Tenho na cabeça, mas não documentado</option>
+          <option>Tenho parcialmente documentado</option>
+          <option>Sim, documentado e revisado periodicamente</option>
+          <option>Sim, documentado com indicadores e acompanhamento</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label class="field-label">De onde vieram os seus últimos 5 novos clientes?</label>
+        <select id="q5">
+          <option value="">Selecione</option>
+          <option>Não sei ou foi por acaso</option>
+          <option>Indicações, sem processo formal</option>
+          <option>Prospecção ativa manual</option>
+          <option>Combinação de canais com alguma estrutura</option>
+          <option>Processo comercial estruturado e previsível</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label class="field-label">O que você quer transformar no negócio em 6 meses com mentoria?</label>
+        <textarea id="q6" placeholder="Descreva o resultado ideal que imagina alcançar..."></textarea>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-ghost" onclick="goStep(2)">← Voltar</button>
+        <button class="btn-primary" onclick="goStep(4)">Gerar diagnóstico →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════
+       ETAPA 4 — DIAGNÓSTICO VISUAL
+  ═══════════════════════════════════ -->
+  <div id="step4" class="hidden">
+    <div class="step-card">
+      <div class="step-eyebrow">Etapa 04</div>
+      <h1 class="step-title">Mapa de maturidade<br>VÉRTICE</h1>
+      <p class="step-desc">Resultado visual dos 7 pilares da sua empresa. Este é o ponto de partida para a análise.</p>
+
+      <div class="metrics-grid" id="metric-cards"></div>
+      <div class="chart-wrap">
+        <canvas id="radarChart" role="img" aria-label="Gráfico radar dos 7 pilares VÉRTICE"></canvas>
+      </div>
+      <div class="bars-section" id="pilar-bars"></div>
+
+      <div class="btn-row">
+        <button class="btn-ghost" onclick="goStep(3)">← Voltar</button>
+        <button class="btn-primary" onclick="goStep(5)">Análise e recomendações →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════
+       ETAPA 5 — ANÁLISE IA
+  ═══════════════════════════════════ -->
+  <div id="step5" class="hidden">
+    <div class="step-card">
+      <div class="step-eyebrow">Etapa 05</div>
+      <h1 class="step-title">Análise diagnóstica<br>& recomendações</h1>
+      <p class="step-desc">Baseado em todos os dados coletados, identificamos os gargalos críticos e o caminho ideal para o seu negócio.</p>
+
+      <div class="ai-block">
+        <div class="ai-loading" id="ai-loading">
+          <div class="dot-pulse"><span></span><span></span><span></span></div>
+          <span>Analisando o diagnóstico completo...</span>
+        </div>
+        <div class="ai-text hidden" id="ai-analysis-text"></div>
+      </div>
+
+      <div id="products-section" class="hidden">
+        <div class="divider"></div>
+        <div class="section-title">Selecione o plano para a proposta</div>
+        <p style="font-size:12px;color:var(--marrom-lt);margin-bottom:1rem;line-height:1.6">O plano marcado abaixo foi sugerido pelo diagnóstico. Você pode selecionar qualquer outro antes de gerar a proposta.</p>
+        <div id="products-list"></div>
+      </div>
+
+      <div class="btn-row hidden" id="step5-btns">
+        <button class="btn-ghost" onclick="goStep(4)">← Voltar</button>
+        <button class="btn-primary" onclick="goStep(6)">Gerar proposta comercial →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════
+       ETAPA 6 — PROPOSTA COMPLETA
+  ═══════════════════════════════════ -->
+  <div id="step6" class="hidden">
+    <div class="step-card">
+      <div class="step-eyebrow">Etapa 06</div>
+      <h1 class="step-title">Proposta comercial<br>personalizada</h1>
+      <p class="step-desc">Construída bloco a bloco com base no seu diagnóstico. Pronta para enviar por WhatsApp, e-mail ou link.</p>
+
+      <!-- Proposta loading -->
+      <div class="ai-block" id="proposta-loading-block">
+        <div class="ai-loading" id="proposta-loading">
+          <div class="dot-pulse"><span></span><span></span><span></span></div>
+          <span>Construindo sua proposta personalizada...</span>
+        </div>
+      </div>
+
+      <!-- Proposta conteúdo -->
+      <div id="proposta-content" class="hidden">
+
+        <div class="proposta-section" id="bloco1">
+          <div class="proposta-num">01</div>
+          <div class="proposta-title">Contexto — O que o diagnóstico revelou</div>
+          <div class="proposta-divider"></div>
+          <div class="proposta-content" id="prop-contexto"></div>
+        </div>
+
+        <div class="proposta-section" id="bloco2">
+          <div class="proposta-num">02</div>
+          <div class="proposta-title">Proposta — O que recomendamos e por quê</div>
+          <div class="proposta-divider"></div>
+          <div class="proposta-content" id="prop-recomendacao"></div>
+        </div>
+
+        <div class="proposta-section" id="bloco3">
+          <div class="proposta-num">03</div>
+          <div class="proposta-title">Entregáveis — O que você vai receber</div>
+          <div class="proposta-divider"></div>
+          <div class="proposta-content" id="prop-entregaveis"></div>
+        </div>
+
+        <div class="proposta-section" id="bloco4">
+          <div class="proposta-num">04</div>
+          <div class="proposta-title">Investimento & ROI esperado</div>
+          <div class="proposta-divider"></div>
+          <div class="proposta-content" id="prop-investimento"></div>
+        </div>
+
+        <div class="proposta-section" id="bloco5">
+          <div class="proposta-num">05</div>
+          <div class="proposta-title">Próximo passo</div>
+          <div class="proposta-divider"></div>
+          <div class="proposta-content" id="prop-cta"></div>
+        </div>
+
+        <div class="divider"></div>
+        <div class="section-title">Compartilhar diagnóstico e proposta</div>
+
+        <div class="share-grid-4">
+          <button class="share-btn whatsapp" onclick="shareWhatsApp()">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            WhatsApp
+          </button>
+          <button class="share-btn email" onclick="shareEmail()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg>
+            E-mail
+          </button>
+          <button class="share-btn link" onclick="shareLink()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244"/></svg>
+            Copiar link
+          </button>
+          <button class="share-btn pdf" onclick="generatePDF()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+            Baixar PDF
+          </button>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn-ghost" onclick="goStep(5)">← Voltar</button>
+          <button class="btn-ghost" onclick="goStep(1); resetAll()">↺ Novo diagnóstico</button>
+        </div>
+      </div>
+
+      <!-- Banner closer renderizado aqui via JS -->
+      <div id="banner-closer-slot"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL CONFIGURAÇÃO DO CLOSER -->
+<div id="modal-closer" style="
+  display:none; position:fixed; inset:0; z-index:200;
+  background:rgba(61,26,26,0.55); backdrop-filter:blur(4px);
+  align-items:center; justify-content:center; padding:1rem;">
+  <div style="
+    background:#FDFAF8; border-radius:2px; border:0.5px solid #DFC2C2;
+    padding:2rem; max-width:420px; width:100%;
+    box-shadow:0 8px 40px rgba(61,26,26,0.18);">
+    <div style="font-size:9px;letter-spacing:0.2em;color:#C49A9A;text-transform:uppercase;margin-bottom:0.5rem">Configuração</div>
+    <div style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:#8B1A3A;margin-bottom:0.25rem">Consultor / Closer</div>
+    <p style="font-size:12px;color:#7A4A4A;margin-bottom:1.25rem;line-height:1.6">Defina quem receberá o aviso automático cada vez que uma proposta for gerada.</p>
+    <div style="margin-bottom:0.875rem">
+      <label style="display:block;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#7A4A4A;font-weight:500;margin-bottom:5px">WhatsApp do closer (com DDD)</label>
+      <input type="tel" id="cfg_whats" placeholder="(11) 99999-9999" style="width:100%;padding:9px 12px;border:1px solid #DFC2C2;border-radius:1px;font-size:13px;font-family:'Montserrat',sans-serif;font-weight:300;background:#F2EAE4;color:#3D1A1A">
+    </div>
+    <div style="margin-bottom:1.5rem">
+      <label style="display:block;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#7A4A4A;font-weight:500;margin-bottom:5px">E-mail do closer</label>
+      <input type="email" id="cfg_email" placeholder="closer@vertice.com.br" style="width:100%;padding:9px 12px;border:1px solid #DFC2C2;border-radius:1px;font-size:13px;font-family:'Montserrat',sans-serif;font-weight:300;background:#F2EAE4;color:#3D1A1A">
+    </div>
+    <div style="display:flex;gap:10px;justify-content:flex-end">
+      <button onclick="fecharModal()" style="background:transparent;color:#7A4A4A;border:1px solid #DFC2C2;padding:9px 18px;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;cursor:pointer;font-family:'Montserrat',sans-serif;border-radius:1px">Cancelar</button>
+      <button onclick="salvarCloser()" style="background:#8B1A3A;color:#F2EAE4;border:none;padding:9px 22px;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;cursor:pointer;font-family:'Montserrat',sans-serif;font-weight:500;border-radius:1px">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- BANNER NOTIFICAÇÃO CLOSER (aparece na etapa 6 após proposta gerada) -->
+<div id="banner-closer" style="display:none">
+  <div style="
+    background:linear-gradient(135deg,#fdf5f0,#FDFAF8);
+    border:1px solid #DFC2C2; border-left:3px solid #8B1A3A;
+    border-radius:1px; padding:1rem 1.25rem; margin-top:1rem;">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap">
+      <div style="flex:1">
+        <div style="font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:#8B1A3A;font-weight:600;margin-bottom:4px">
+          ✓ Closer notificado automaticamente
+        </div>
+        <div style="font-size:12px;color:#7A4A4A;line-height:1.6" id="banner-closer-info">
+          Aviso enviado por WhatsApp e e-mail com o diagnóstico completo e dados do lead.
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;flex-shrink:0;margin-top:2px">
+        <button onclick="notificarCloserWhats()" title="Reenviar WhatsApp" style="
+          background:#f0faf2;color:#1a6e35;border:1px solid #25D366;
+          padding:6px 12px;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;
+          cursor:pointer;font-family:'Montserrat',sans-serif;font-weight:500;border-radius:1px;
+          display:flex;align-items:center;gap:5px">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          WhatsApp
+        </button>
+        <button onclick="notificarCloserEmail()" title="Reenviar E-mail" style="
+          background:#F2EAE4;color:#8B1A3A;border:1px solid #8B1A3A;
+          padding:6px 12px;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;
+          cursor:pointer;font-family:'Montserrat',sans-serif;font-weight:500;border-radius:1px;
+          display:flex;align-items:center;gap:5px">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg>
+          E-mail
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PDF REPORT TEMPLATE (oculto, usado para geração) -->
+<div id="pdf-report" style="
+  position:fixed; top:-9999px; left:-9999px;
+  width:794px; padding:60px;
+  background:#FDFAF8; font-family:'Montserrat',sans-serif;
+  font-weight:300; color:#3D1A1A;">
+  <div id="pdf-content"></div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════
+   DADOS
+═══════════════════════════════════════════════ */
+const PILARES = [
+  { id:'V',   nome:'Visão',         desc:'Clareza de propósito, missão, valores e direção de longo prazo', cor:'#8B1A3A' },
+  { id:'É',   nome:'Estratégia',    desc:'Planejamento, metas, priorização e tomada de decisão',           cor:'#A0293E' },
+  { id:'R',   nome:'Resultado',     desc:'Indicadores, métricas, previsibilidade e gestão financeira',      cor:'#7A4A4A' },
+  { id:'T',   nome:'Transformação', desc:'Processos, cultura, liderança e autonomia do time',              cor:'#B04060' },
+  { id:'I',   nome:'Inovação',      desc:'Novos produtos, modelos, tendências e adaptação ao mercado',     cor:'#C49A9A' },
+  { id:'C',   nome:'Crescimento',   desc:'Vendas, marketing, aquisição e retenção de clientes',            cor:'#6A1229' },
+  { id:'E',   nome:'Escala',        desc:'Estrutura, sistemas, capital e expansão sustentável',            cor:'#3D1A1A' }
+];
+
+const PRODUTOS = [
+  {
+    id:'express', nome:'VÉRTICE Express — 30 dias',
+    desc:'Diagnóstico profundo, plano de ação priorizado e 3 sessões de implementação.',
+    why:'Ideal para empresários que precisam de clareza e direção imediata, sem comprometer 6 meses de agenda.',
+    preco:'R$ 8.000', pilares:['V','É','R']
+  },
+  {
+    id:'V', nome:'Módulo V — Visão',
+    desc:'Propósito, posicionamento e direção estratégica de longo prazo.',
+    why:'Para quem age sem clareza de destino e confunde movimento com progresso.',
+    preco:'R$ 2.800', pilares:['V']
+  },
+  {
+    id:'É', nome:'Módulo É — Estratégia',
+    desc:'Plano estratégico documentado, metas, OKRs e execução consistente.',
+    why:'Para quem tem visão mas não tem o mapa do caminho — e erra nas prioridades.',
+    preco:'R$ 3.200', pilares:['É']
+  },
+  {
+    id:'R', nome:'Módulo R — Resultado',
+    desc:'Gestão financeira, indicadores, previsibilidade e dashboards de KPIs.',
+    why:'Para quem trabalha no escuro, sem dados, e descobre os problemas tarde demais.',
+    preco:'R$ 2.500', pilares:['R']
+  },
+  {
+    id:'T', nome:'Módulo T — Transformação',
+    desc:'Processos, liderança, cultura e autonomia da equipe.',
+    why:'Para o dono que se tornou o maior gargalo da própria empresa.',
+    preco:'R$ 4.500', pilares:['T']
+  },
+  {
+    id:'I', nome:'Módulo I — Inovação',
+    desc:'Novos produtos, modelos de negócio e adaptação ao mercado.',
+    why:'Para quem sente que o mercado mudou e o negócio ficou para trás.',
+    preco:'R$ 5.500', pilares:['I']
+  },
+  {
+    id:'C', nome:'Módulo C — Crescimento',
+    desc:'Processo comercial, marketing e aquisição de clientes escalável.',
+    why:'Para quem depende de indicações e não tem previsibilidade em vendas.',
+    preco:'R$ 4.800', pilares:['C']
+  },
+  {
+    id:'E', nome:'Módulo E — Escala',
+    desc:'Estrutura organizacional, expansão e sistemas para crescer sem depender do dono.',
+    why:'Para negócios prontos para crescer que ainda não têm a estrutura para sustentar o crescimento.',
+    preco:'R$ 6.500', pilares:['E']
+  },
+  {
+    id:'completo', nome:'VÉRTICE Completo — 6 meses',
+    desc:'Todos os 7 pilares trabalhados em sequência. Transformação estrutural completa.',
+    why:'Para empresários comprometidos com uma mudança real e duradoura no negócio.',
+    preco:'R$ 18.500', pilares:['V','É','R','T','I','C','E']
+  },
+  {
+    id:'master', nome:'VÉRTICE Master — 12 meses',
+    desc:'Acompanhamento intensivo anual com suporte contínuo e mentoria de alto nível.',
+    why:'Para líderes que querem escalar com consistência e ter um parceiro estratégico permanente.',
+    preco:'R$ 32.000', pilares:['V','É','R','T','I','C','E']
+  }
+];
+
+let scores = {};
+let radarChartInst = null;
+let propostaGerada = {};
+
+/* ═══════════════════════════════════════════════
+   PROGRESS
+═══════════════════════════════════════════════ */
+const STEP_LABELS = [
+  'Etapa 1 de 6 — Identificação',
+  'Etapa 2 de 6 — Avaliação dos pilares',
+  'Etapa 3 de 6 — Perguntas estratégicas',
+  'Etapa 4 de 6 — Diagnóstico visual',
+  'Etapa 5 de 6 — Análise & recomendações',
+  'Etapa 6 de 6 — Proposta comercial'
+];
+
+function buildProgress(current) {
+  const wrap = document.getElementById('prog-wrap');
+  wrap.innerHTML = '';
+  for(let i=1; i<=6; i++) {
+    const seg = document.createElement('div');
+    seg.className = 'prog-step ' + (i < current ? 'done' : i === current ? 'active' : '');
+    seg.innerHTML = '<div class="prog-dot"></div>';
+    wrap.appendChild(seg);
+  }
+  document.getElementById('prog-label').textContent = STEP_LABELS[current-1];
+}
+
+/* ═══════════════════════════════════════════════
+   PILARES
+═══════════════════════════════════════════════ */
+function buildPilares() {
+  const c = document.getElementById('pilares-container');
+  c.innerHTML = '';
+  PILARES.forEach(p => {
+    const v = scores[p.id] || 5;
+    const div = document.createElement('div');
+    div.className = 'pilar-card';
+    div.innerHTML = `
+      <div class="pilar-header">
+        <div class="pilar-letter" style="background:${p.cor}18;color:${p.cor}">${p.id}</div>
+        <div class="pilar-info">
+          <div class="pilar-name">${p.nome}</div>
+          <div class="pilar-desc">${p.desc}</div>
+        </div>
+      </div>
+      <div class="slider-row">
+        <span class="slider-lbl">1</span>
+        <input type="range" min="1" max="10" step="1" value="${v}" id="range_${p.id}">
+        <span class="slider-lbl">10</span>
+        <span class="slider-val" id="val_${p.id}">${v}</span>
+      </div>`;
+    c.appendChild(div);
+    div.querySelector(`#range_${p.id}`).addEventListener('input', function() {
+      scores[p.id] = parseInt(this.value);
+      document.getElementById('val_'+p.id).textContent = this.value;
+    });
+  });
+}
+
+function getScores() {
+  PILARES.forEach(p => {
+    const r = document.getElementById('range_'+p.id);
+    if(r) scores[p.id] = parseInt(r.value);
+  });
+  return scores;
+}
+
+function calcMedia() {
+  const s = getScores();
+  const vals = PILARES.map(p => s[p.id] || 5);
+  return Math.round((vals.reduce((a,b)=>a+b,0)/vals.length)*10)/10;
+}
+
+function getPilarFraco() {
+  const s = getScores();
+  return PILARES.reduce((a,b) => (s[a.id]||5) < (s[b.id]||5) ? a : b);
+}
+
+function getPilarForte() {
+  const s = getScores();
+  return PILARES.reduce((a,b) => (s[a.id]||5) > (s[b.id]||5) ? a : b);
+}
+
+function getRecommendedProducts() {
+  const s = getScores();
+  const media = calcMedia();
+  const fraco = getPilarFraco();
+  const second = PILARES.filter(p=>p.id!==fraco.id).reduce((a,b)=>(s[a.id]||5)<(s[b.id]||5)?a:b);
+  let rec = [];
+  if(media < 4.5)       rec = ['completo', fraco.id];
+  else if(media < 6.0)  rec = ['express', fraco.id, second.id];
+  else if(media < 7.5)  rec = [fraco.id, 'express'];
+  else                  rec = [fraco.id, second.id];
+  return [...new Set(rec)].slice(0,3);
+}
+
+/* ═══════════════════════════════════════════════
+   DIAGNÓSTICO VISUAL
+═══════════════════════════════════════════════ */
+function buildDiagnostico() {
+  const s = getScores();
+  const media = calcMedia();
+  const fraco = getPilarFraco();
+  const forte = getPilarForte();
+  const criticos = PILARES.filter(p=>(s[p.id]||5)<5).length;
+
+  document.getElementById('metric-cards').innerHTML = `
+    <div class="metric-box">
+      <div class="metric-num">${media}</div>
+      <div class="metric-lbl">Índice geral de maturidade</div>
+    </div>
+    <div class="metric-box">
+      <div class="metric-num" style="color:${fraco.cor}">${s[fraco.id]||5}</div>
+      <div class="metric-lbl">Pilar crítico: ${fraco.nome}</div>
+    </div>
+    <div class="metric-box">
+      <div class="metric-num" style="color:#8B1A3A">${s[forte.id]||5}</div>
+      <div class="metric-lbl">Pilar forte: ${forte.nome}</div>
+    </div>
+    <div class="metric-box">
+      <div class="metric-num" style="color:${criticos>0?'#A0293E':'#8B1A3A'}">${criticos}</div>
+      <div class="metric-lbl">Pilares críticos (< 5)</div>
+    </div>`;
+
+  if(radarChartInst) radarChartInst.destroy();
+  const ctx = document.getElementById('radarChart').getContext('2d');
+  radarChartInst = new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels: PILARES.map(p => p.id + ' — ' + p.nome),
+      datasets: [{
+        label: 'Maturidade',
+        data: PILARES.map(p => s[p.id]||5),
+        backgroundColor: 'rgba(139,26,58,0.10)',
+        borderColor: '#8B1A3A',
+        borderWidth: 1.5,
+        pointBackgroundColor: '#8B1A3A',
+        pointBorderColor: '#F2EAE4',
+        pointBorderWidth: 2,
+        pointRadius: 5,
+        pointHoverRadius: 7,
+      }]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{ display:false } },
+      scales:{
+        r:{
+          min:0, max:10,
+          ticks:{ stepSize:2, font:{size:10}, color:'#C49A9A', backdropColor:'transparent' },
+          pointLabels:{ font:{size:11, family:"'Montserrat', sans-serif"}, color:'#7A4A4A' },
+          grid:{ color:'rgba(196,154,154,0.25)' },
+          angleLines:{ color:'rgba(196,154,154,0.25)' }
+        }
+      }
+    }
+  });
+
+  document.getElementById('pilar-bars').innerHTML = PILARES.map(p => {
+    const v = s[p.id]||5;
+    const tag = v>=7?'Forte':v>=5?'Médio':'Crítico';
+    const tagColor = v>=7?'#8B1A3A':v>=5?'#B04060':'#A0293E';
+    return `
+    <div class="bar-row">
+      <span class="bar-label"><strong>${p.id}</strong> — ${p.nome}</span>
+      <div class="bar-bg"><div class="bar-fill" style="width:${v*10}%;background:${p.cor}"></div></div>
+      <span class="bar-score">${v}/10</span>
+      <span class="bar-tag" style="color:${tagColor}">${tag}</span>
+    </div>`;
+  }).join('');
+}
+
+/* ═══════════════════════════════════════════════
+   COLETA DE DADOS
+═══════════════════════════════════════════════ */
+function getDados() {
+  return {
+    nome:    document.getElementById('f_nome').value    || 'Empresário',
+    empresa: document.getElementById('f_empresa').value || 'a empresa',
+    email:   document.getElementById('f_email').value   || '',
+    whats:   document.getElementById('f_whats').value   || '',
+    setor:   document.getElementById('f_setor').value   || 'não informado',
+    fat:     document.getElementById('f_fat').value     || 'não informado',
+    colab:   document.getElementById('f_colab').value   || 'não informado',
+    tempo:   document.getElementById('f_tempo').value   || 'não informado',
+    desafio: document.getElementById('f_desafio').value || '',
+    q1: document.getElementById('q1').value || '',
+    q2: document.getElementById('q2').value || '',
+    q3: document.getElementById('q3').value || '',
+    q4: document.getElementById('q4').value || '',
+    q5: document.getElementById('q5').value || '',
+    q6: document.getElementById('q6').value || '',
+  };
+}
+
+/* ═══════════════════════════════════════════════
+   IA — ANÁLISE
+═══════════════════════════════════════════════ */
+async function runAIAnalysis() {
+  const s = getScores();
+  const d = getDados();
+  const media = calcMedia();
+  const fraco = getPilarFraco();
+  const pilaresStr = PILARES.map(p=>`${p.nome} (${p.id}): ${s[p.id]||5}/10`).join(' | ');
+
+  const prompt = `Você é mentor sênior da Metodologia VÉRTICE, especialista em crescimento empresarial. Analise o diagnóstico abaixo e escreva uma análise direta, personalizada, que o empresário sinta que foi feita especificamente para ele.
+
+PERFIL:
+Nome: ${d.nome} | Empresa: ${d.empresa} | Setor: ${d.setor}
+Faturamento: ${d.fat} | Colaboradores: ${d.colab} | Tempo de empresa: ${d.tempo}
+Principal desafio: ${d.desafio}
+
+PONTUAÇÃO DOS 7 PILARES VÉRTICE:
+${pilaresStr}
+Média geral: ${media}/10 | Pilar mais fraco: ${fraco.nome} (${s[fraco.id]||5}/10)
+
+RESPOSTAS ESTRATÉGICAS:
+- Dependência do dono: ${d.q1}
+- Previsibilidade financeira: ${d.q2}
+- Capacidade de inovação: ${d.q3}
+- Planejamento estratégico: ${d.q4}
+- Origem dos clientes: ${d.q5}
+- Expectativa com mentoria: ${d.q6}
+
+Escreva em 4 blocos com os títulos abaixo (use exatamente estes títulos em maiúsculo no início de cada bloco):
+
+DIAGNÓSTICO GERAL
+[2-3 frases diretas sobre o momento atual do negócio, sem floreios. Mencione o nome da empresa e dados reais.]
+
+TRÊS GARGALOS CRÍTICOS
+— [Gargalo 1: nome + explicação de como ele se manifesta neste negócio específico]
+— [Gargalo 2: nome + explicação]
+— [Gargalo 3: nome + explicação]
+
+PADRÃO IDENTIFICADO
+[1-2 frases sobre o padrão comportamental ou estrutural que está travando o crescimento. Seja cirúrgico.]
+
+AÇÃO IMEDIATA
+[1 frase: a ação mais impactante que este empresário deveria executar nos próximos 30 dias.]
+
+Máximo 250 palavras. Tom: direto, respeitoso, sem bajulação. Use os dados reais para ser específico.`;
+
+  let analysisText = '';
+  try {
+    const controller = new AbortController();
+    const timer = setTimeout(()=>controller.abort(), 12000);
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST', signal: controller.signal,
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ model:'claude-sonnet-4-6', max_tokens:1000, messages:[{role:'user',content:prompt}] })
+    });
+    clearTimeout(timer);
+    if(res.ok) {
+      const data = await res.json();
+      analysisText = data.content?.map(c=>c.text||'').join('') || '';
+    }
+  } catch(e) { /* usa fallback */ }
+
+  // Fallback local de análise
+  if(!analysisText || analysisText.length < 80) {
+    const pilaresAbaixo = PILARES.filter(p=>(s[p.id]||5)<6).map(p=>p.nome);
+    const pilaresOk     = PILARES.filter(p=>(s[p.id]||5)>=7).map(p=>p.nome);
+    analysisText =
+`DIAGNÓSTICO GERAL
+${d.empresa||'A empresa'} opera com média de ${media}/10 nos 7 pilares VÉRTICE — um nível que indica potencial de crescimento significativo, mas com gargalos estruturais que precisam ser endereçados antes de qualquer tentativa de escala. ${d.desafio ? `O desafio declarado — "${d.desafio}" — é sintoma direto dos pilares comprometidos, não causa isolada.` : ''}
+
+TRÊS GARGALOS CRÍTICOS
+— ${fraco.nome} (${s[fraco.id]||5}/10): o pilar mais crítico do diagnóstico. ${d.q1 ? `A resposta "${d.q1}" confirma que a estrutura atual está centralizada no fundador, limitando crescimento.` : 'A baixa pontuação indica falta de estrutura que compromete todas as outras áreas.'}
+— Previsibilidade: ${d.q2||'ausência de previsibilidade financeira'} — sem métricas claras, decisões são tomadas no improviso.
+— ${pilaresAbaixo.length > 1 ? pilaresAbaixo.slice(1,2).join('') : 'Planejamento estratégico'}: ${d.q4||'sem plano documentado'}, o que gera urgência constante e impede execução consistente.
+
+PADRÃO IDENTIFICADO
+${d.nome||'O empresário'} está preso no ciclo de trabalhar no negócio em vez de trabalhar pelo negócio. ${pilaresOk.length ? `Os pontos fortes em ${pilaresOk.join(', ')} mostram capacidade — o que falta é estrutura, não esforço.` : 'O esforço existe; a estrutura para transformá-lo em resultado previsível, não.'}
+
+AÇÃO IMEDIATA
+Estruturar os pilares de ${(pilaresAbaixo.slice(0,2).join(' e '))||fraco.nome} com processos documentados e indicadores de acompanhamento — antes de investir em crescimento.`;
+  }
+
+  document.getElementById('ai-loading').classList.add('hidden');
+  const el = document.getElementById('ai-analysis-text');
+  el.classList.remove('hidden');
+  el.textContent = analysisText;
+
+  const recIds = getRecommendedProducts();
+  const primaryRec = recIds[0];
+  // Set default selected plan to primary recommendation
+  window._planSelecionado = primaryRec;
+
+  const html = PRODUTOS.map(p => {
+    const isRec = p.id === primaryRec;
+    const isSelected = p.id === primaryRec;
+    return `
+    <div class="product-rec ${isRec?'top':''} ${isSelected?'selected':''}"
+         id="plan-card-${p.id}"
+         onclick="selecionarPlano('${p.id}')"
+         style="cursor:pointer;position:relative;transition:all .2s">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
+        <div style="flex:1">
+          ${isRec?'<div class="rec-badge">Recomendado pelo diagnóstico</div>':''}
+          <div class="rec-name">${p.nome}</div>
+          <div class="rec-desc">${p.desc}</div>
+          <div class="rec-why">↳ ${p.why}</div>
+          <div class="rec-price">${p.preco}</div>
+        </div>
+        <div id="plan-check-${p.id}" style="
+          width:20px;height:20px;border-radius:50%;flex-shrink:0;margin-top:3px;
+          border:2px solid ${isSelected?'#8B1A3A':'#DFC2C2'};
+          background:${isSelected?'#8B1A3A':'transparent'};
+          display:flex;align-items:center;justify-content:center;
+          transition:all .2s">
+          ${isSelected?'<svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#F2EAE4" stroke-width="1.8" stroke-linecap="round"/></svg>':''}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('products-list').innerHTML = html;
+  document.getElementById('products-section').classList.remove('hidden');
+  document.getElementById('step5-btns').classList.remove('hidden');
+}
+
+/* ═══════════════════════════════════════════════
+   IA — PROPOSTA COMERCIAL COMPLETA
+═══════════════════════════════════════════════ */
+async function runProposta() {
+  const s = getScores();
+  const d = getDados();
+  const media = calcMedia();
+  const fraco = getPilarFraco();
+  // Use plano selecionado pelo usuário, ou fallback ao recomendado
+  const planId = window._planSelecionado || getRecommendedProducts()[0];
+  const recProd = PRODUTOS.find(p=>p.id===planId) || PRODUTOS[0];
+  const pilaresStr = PILARES.map(p=>`${p.nome}: ${s[p.id]||5}/10`).join(' | ');
+  const analise = document.getElementById('ai-analysis-text')?.textContent || '';
+
+  const prompt = `Você é o mentor responsável pela Metodologia VÉRTICE. Redija uma proposta comercial premium em 5 blocos, usando linguagem consultiva, direta e que demonstre que você leu cada detalhe do diagnóstico.
+
+DADOS DO EMPRESÁRIO:
+Nome: ${d.nome} | Empresa: ${d.empresa} | Setor: ${d.setor}
+Faturamento: ${d.fat} | Colaboradores: ${d.colab} | Tempo: ${d.tempo}
+Desafio declarado: ${d.desafio}
+Expectativa com mentoria: ${d.q6}
+Dependência do dono: ${d.q1}
+Previsibilidade: ${d.q2}
+Inovação: ${d.q3}
+Planejamento: ${d.q4}
+Origem clientes: ${d.q5}
+
+DIAGNÓSTICO:
+Pilares: ${pilaresStr}
+Média: ${media}/10 | Pilar mais fraco: ${fraco.nome} (${s[fraco.id]||5}/10)
+
+ANÁLISE JÁ GERADA:
+${analise}
+
+PRODUTO RECOMENDADO: ${recProd.nome} — ${recProd.preco}
+
+Escreva exatamente 5 blocos com estes títulos (em maiúsculo):
+
+BLOCO 1 — CONTEXTO
+[1 parágrafo. Cite pelo nome o empresário e a empresa. Referencie 3 dores/padrões específicos identificados no diagnóstico — não genéricos. Mostre que você leu tudo.]
+
+BLOCO 2 — PROPOSTA E JUSTIFICATIVA
+[2 parágrafos. Apresente o programa recomendado. Explique ESPECIFICAMENTE por que este programa foi escolhido para este perfil — conectando os pilares mais fracos com o que o programa resolve. Não use linguagem de vendas vazia.]
+
+BLOCO 3 — ENTREGÁVEIS
+[Lista com 6 itens iniciando com —. Seja específico: não "sessões de mentoria" mas "4 sessões mensais de 90min focadas em [pilar fraco]". Use o contexto do diagnóstico.]
+
+BLOCO 4 — INVESTIMENTO E ROI
+[Apresente o investimento (valor único: ${recProd.preco}). Faça comparativo de valor: "Você está faturando ${d.fat}. Se em ${recProd.id==='completo'||recProd.id==='master'?'6 a 12 meses':'30 a 90 dias'} o programa resolver [problema específico identificado], o retorno esperado é..." NÃO mencione garantia, devolução de dinheiro ou prazo de cancelamento. Apenas o valor e o ROI esperado.]
+
+BLOCO 5 — PRÓXIMO PASSO
+[Máximo 3 linhas. Informe que o consultor comercial da VÉRTICE entrará em contato em breve para agendar uma reunião de apresentação e alinhamento, onde todos os detalhes e condições serão apresentados. Tom acolhedor, sem pressão. NÃO peça para o lead confirmar vaga ou responder com palavra-chave.]
+
+Tom: consultivo, premium, direto. Sem clichês de vendas. Máximo 420 palavras no total.`;
+
+  // Tenta via API; se falhar, usa gerador local de alta qualidade
+  let blocos = null;
+  try {
+    const controller = new AbortController();
+    const timer = setTimeout(()=>controller.abort(), 12000);
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST', signal: controller.signal,
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ model:'claude-sonnet-4-6', max_tokens:1500, messages:[{role:'user',content:prompt}] })
+    });
+    clearTimeout(timer);
+    if(res.ok) {
+      const data = await res.json();
+      const text = data.content?.map(c=>c.text||'').join('') || '';
+      if(text.length > 100) blocos = parseBlocos(text);
+    }
+  } catch(e) { /* fallback abaixo */ }
+
+  // Fallback local: gera proposta estruturada com os dados do diagnóstico
+  if(!blocos || !blocos.contexto) {
+    blocos = gerarPropostaLocal(d, s, media, fraco, recProd);
+  }
+
+  propostaGerada = { ...blocos, dados: d, produto: recProd, media, fraco: fraco.nome };
+
+  document.getElementById('prop-contexto').textContent     = blocos.contexto     || '';
+  document.getElementById('prop-recomendacao').textContent = blocos.proposta      || '';
+  document.getElementById('prop-entregaveis').textContent  = blocos.entregaveis   || '';
+  document.getElementById('prop-investimento').textContent = blocos.investimento   || '';
+  document.getElementById('prop-cta').textContent          = blocos.cta            || '';
+
+  document.getElementById('proposta-loading-block').classList.add('hidden');
+  document.getElementById('proposta-content').classList.remove('hidden');
+
+  // Dispara aviso automático ao closer
+  notificarCloser();
+}
+
+/* ═══════════════════════════════════════════════
+   GERADOR LOCAL DE PROPOSTA (fallback sem API)
+═══════════════════════════════════════════════ */
+function gerarPropostaLocal(d, s, media, fraco, recProd) {
+  const pilaresAbaixo = PILARES.filter(p=>(s[p.id]||5)<6).map(p=>p.nome);
+  const pilaresStr    = pilaresAbaixo.length ? pilaresAbaixo.join(', ') : fraco.nome;
+  const nomeEmpresa   = d.empresa || 'sua empresa';
+  const nomeLead      = d.nome    || 'Empresário';
+  const prazo         = recProd.id === 'completo' || recProd.id === 'master' ? '6 a 12 meses' : '30 a 90 dias';
+
+  const contexto =
+`${nomeLead}, ao analisar o diagnóstico da ${nomeEmpresa}, três padrões se destacaram com clareza.
+
+Primeiro: com média de ${media}/10 nos 7 pilares VÉRTICE, o negócio opera abaixo do potencial estrutural — especialmente nos pilares de ${pilaresStr}, que registraram os menores índices. Segundo: ${d.q1 ? `a questão da autonomia operacional é crítica — "${d.q1}" — o que indica dependência excessiva do fundador nas operações do dia a dia.` : 'há sinais de concentração operacional no fundador, comprometendo a escalabilidade.'} Terceiro: ${d.desafio ? `o desafio declarado — "${d.desafio}" — está diretamente conectado aos pilares com menor pontuação, o que confirma que não se trata de um problema isolado, mas de uma lacuna estrutural.`:`a ausência de previsibilidade em resultados e processos limita o crescimento sustentável.`}`;
+
+  const proposta =
+`Com base nesse diagnóstico, a recomendação é o *${recProd.nome}*.
+
+Este programa foi escolhido especificamente para o perfil da ${nomeEmpresa} porque ataca diretamente os pilares de ${pilaresStr} — os pontos que mais limitam o crescimento atual. Ao contrário de uma consultoria genérica, o VÉRTICE trabalha com entregáveis concretos em cada pilar, com sessões estruturadas e acompanhamento de indicadores reais do seu negócio.
+
+O objetivo em ${prazo}: transformar os pilares críticos em estruturas funcionais, reduzir a dependência do fundador e criar previsibilidade de resultados — para que ${nomeLead} possa crescer com estratégia, não apenas com esforço.`;
+
+  const entregaveis =
+`— Diagnóstico aprofundado VÉRTICE com Mapa de Maturidade por pilar
+— Sessões de mentoria individuais focadas nos pilares de ${pilaresStr}
+— Plano de ação documentado com prioridades e prazos definidos
+— Acompanhamento de KPIs e indicadores ao longo do programa
+— Templates e ferramentas de gestão adaptadas ao setor de ${d.setor||'seu negócio'}
+— Suporte via WhatsApp entre sessões para dúvidas e alinhamentos`;
+
+  const fat = d.fat || 'seu faturamento atual';
+  const investimento =
+`Investimento: ${recProd.preco}
+Condições de pagamento: a serem apresentadas pelo consultor comercial na reunião de alinhamento.
+
+Comparativo de valor: ${nomeEmpresa} fatura ${fat}. Se em ${prazo} o programa resolver os gargalos de ${pilaresStr} — mesmo que isso represente um aumento de 15% no resultado — o retorno sobre o investimento será múltiplo. O custo de não estruturar agora é maior do que o investimento em estruturar.`;
+
+  const cta =
+`${nomeLead}, o próximo passo é aguardar o contato do nosso consultor comercial, que entrará em contato em breve para agendar uma reunião de apresentação e alinhamento.
+
+Nessa reunião serão apresentados todos os detalhes do programa, condições de pagamento e tiradas todas as suas dúvidas antes de qualquer decisão.`;
+
+  return { contexto, proposta, entregaveis, investimento, cta };
+}
+
+function parseBlocos(text) {
+  const out = { contexto:'', proposta:'', entregaveis:'', investimento:'', cta:'' };
+  const map = [
+    { key:'contexto',     pattern:/BLOCO 1[^\n]*\n([\s\S]*?)(?=BLOCO 2|$)/i },
+    { key:'proposta',     pattern:/BLOCO 2[^\n]*\n([\s\S]*?)(?=BLOCO 3|$)/i },
+    { key:'entregaveis',  pattern:/BLOCO 3[^\n]*\n([\s\S]*?)(?=BLOCO 4|$)/i },
+    { key:'investimento', pattern:/BLOCO 4[^\n]*\n([\s\S]*?)(?=BLOCO 5|$)/i },
+    { key:'cta',          pattern:/BLOCO 5[^\n]*\n([\s\S]*?)$/i },
+  ];
+  map.forEach(m => {
+    const match = text.match(m.pattern);
+    if(match) out[m.key] = match[1].trim();
+  });
+  if(!out.contexto) out.contexto = text;
+  return out;
+}
+
+/* ═══════════════════════════════════════════════
+   SELEÇÃO DE PLANO
+═══════════════════════════════════════════════ */
+function selecionarPlano(id) {
+  // Desmarca todos
+  PRODUTOS.forEach(p => {
+    const card  = document.getElementById('plan-card-'+p.id);
+    const check = document.getElementById('plan-check-'+p.id);
+    if(card) {
+      card.style.borderColor = '';
+      card.classList.remove('selected');
+    }
+    if(check) {
+      check.style.border = '2px solid #DFC2C2';
+      check.style.background = 'transparent';
+      check.innerHTML = '';
+    }
+  });
+  // Marca selecionado
+  const selCard  = document.getElementById('plan-card-'+id);
+  const selCheck = document.getElementById('plan-check-'+id);
+  if(selCard) selCard.style.borderColor = '#8B1A3A';
+  if(selCheck) {
+    selCheck.style.border = '2px solid #8B1A3A';
+    selCheck.style.background = '#8B1A3A';
+    selCheck.innerHTML = '<svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#F2EAE4" stroke-width="1.8" stroke-linecap="round"/></svg>';
+  }
+  window._planSelecionado = id;
+  showToast('Plano selecionado: ' + (PRODUTOS.find(p=>p.id===id)?.nome || id));
+}
+
+/* ═══════════════════════════════════════════════
+   CLOSER — CONFIGURAÇÃO
+═══════════════════════════════════════════════ */
+function abrirModal() {
+  const m = document.getElementById('modal-closer');
+  m.style.display = 'flex';
+  // Pre-preenche com valores salvos
+  const cfg = getCloserConfig();
+  document.getElementById('cfg_whats').value = cfg.whats || '';
+  document.getElementById('cfg_email').value = cfg.email || '';
+}
+
+function fecharModal() {
+  document.getElementById('modal-closer').style.display = 'none';
+}
+
+function salvarCloser() {
+  const w = document.getElementById('cfg_whats').value.trim();
+  const e = document.getElementById('cfg_email').value.trim();
+  try {
+    localStorage.setItem('vertice_closer_whats', w);
+    localStorage.setItem('vertice_closer_email', e);
+  } catch(_) {
+    // fallback: variáveis globais se localStorage não disponível
+    window._closerWhats = w;
+    window._closerEmail = e;
+  }
+  fecharModal();
+  showToast('Dados do closer salvos com sucesso');
+}
+
+function getCloserConfig() {
+  try {
+    return {
+      whats: localStorage.getItem('vertice_closer_whats') || window._closerWhats || '',
+      email: localStorage.getItem('vertice_closer_email') || window._closerEmail || ''
+    };
+  } catch(_) {
+    return { whats: window._closerWhats || '', email: window._closerEmail || '' };
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   CLOSER — NOTIFICAÇÃO AUTOMÁTICA
+═══════════════════════════════════════════════ */
+function montarMsgCloser() {
+  const p  = propostaGerada;
+  const d  = p.dados || {};
+  const s  = getScores();
+  const hora = new Date().toLocaleString('pt-BR', { dateStyle:'short', timeStyle:'short' });
+
+  // Scores dos pilares formatados
+  const pilaresLinha = PILARES.map(pl=>`${pl.id} ${pl.nome}: ${s[pl.id]||5}/10`).join('\n');
+
+  return `🔔 *NOVO LEAD — PROPOSTA GERADA*
+_Metodologia VÉRTICE · ${hora}_
+
+━━━━━━━━━━━━━━━━━━━━
+👤 *DADOS DO LEAD*
+━━━━━━━━━━━━━━━━━━━━
+Nome: *${d.nome||'—'}*
+Empresa: ${d.empresa||'—'}
+Setor: ${d.setor||'—'}
+Faturamento: ${d.fat||'—'}
+Colaboradores: ${d.colab||'—'}
+WhatsApp: ${d.whats||'—'}
+E-mail: ${d.email||'—'}
+
+━━━━━━━━━━━━━━━━━━━━
+📊 *DIAGNÓSTICO VÉRTICE*
+━━━━━━━━━━━━━━━━━━━━
+Índice de maturidade: *${p.media||'—'}/10*
+Pilar crítico: *${p.fraco||'—'}*
+
+Pontuação por pilar:
+${pilaresLinha}
+
+Desafio declarado: ${d.desafio||'—'}
+Dependência do dono: ${d.q1||'—'}
+Previsibilidade financeira: ${d.q2||'—'}
+Planejamento estratégico: ${d.q4||'—'}
+Origem de clientes: ${d.q5||'—'}
+
+━━━━━━━━━━━━━━━━━━━━
+💼 *PROPOSTA GERADA*
+━━━━━━━━━━━━━━━━━━━━
+Produto: *${p.produto?.nome||'—'}*
+Valor: ${p.produto?.preco||'—'}
+
+📋 CONTEXTO
+${p.contexto||''}
+
+🎯 PROPOSTA & JUSTIFICATIVA
+${p.proposta||''}
+
+📦 ENTREGÁVEIS
+${p.entregaveis||''}
+
+💰 INVESTIMENTO & ROI
+${p.investimento||''}
+
+✅ PRÓXIMO PASSO
+${p.cta||''}
+
+━━━━━━━━━━━━━━━━━━━━
+_Ação recomendada: entrar em contato com ${d.nome||'o lead'} nas próximas 2 horas._`;
+}
+
+function notificarCloserWhats() {
+  const cfg = getCloserConfig();
+  if(!cfg.whats) {
+    showToast('Configure o WhatsApp do closer primeiro (botão Closer)');
+    abrirModal(); return;
+  }
+  const numero = cfg.whats.replace(/\D/g,'');
+  const msg = montarMsgCloser();
+  window.open(`https://wa.me/55${numero}?text=${encodeURIComponent(msg)}`, '_blank');
+  showToast('WhatsApp do closer aberto');
+}
+
+function notificarCloserEmail() {
+  const cfg = getCloserConfig();
+  if(!cfg.email) {
+    showToast('Configure o e-mail do closer primeiro (botão Closer)');
+    abrirModal(); return;
+  }
+  const d   = propostaGerada.dados || {};
+  const p   = propostaGerada;
+  const s   = getScores();
+  const hora = new Date().toLocaleString('pt-BR', { dateStyle:'short', timeStyle:'short' });
+  const pilaresLinha = PILARES.map(pl=>`${pl.id} — ${pl.nome}: ${s[pl.id]||5}/10`).join('\n');
+
+  const subject = `[VÉRTICE] Novo lead — ${d.nome||'Lead'} · ${d.empresa||''} · ${hora}`;
+  const body =
+`NOVO LEAD — PROPOSTA GERADA
+Metodologia VÉRTICE · ${hora}
+
+━━━━━━━━━━━━━━━━━━━━
+DADOS DO LEAD
+━━━━━━━━━━━━━━━━━━━━
+Nome: ${d.nome||'—'}
+Empresa: ${d.empresa||'—'}
+Setor: ${d.setor||'—'}
+Faturamento: ${d.fat||'—'}
+Colaboradores: ${d.colab||'—'}
+WhatsApp: ${d.whats||'—'}
+E-mail: ${d.email||'—'}
+
+━━━━━━━━━━━━━━━━━━━━
+DIAGNÓSTICO VÉRTICE
+━━━━━━━━━━━━━━━━━━━━
+Índice de maturidade: ${p.media||'—'}/10
+Pilar crítico: ${p.fraco||'—'}
+
+Pontuação por pilar:
+${pilaresLinha}
+
+Desafio declarado: ${d.desafio||'—'}
+Dependência do dono: ${d.q1||'—'}
+Previsibilidade financeira: ${d.q2||'—'}
+Planejamento estratégico: ${d.q4||'—'}
+Origem de clientes: ${d.q5||'—'}
+
+━━━━━━━━━━━━━━━━━━━━
+PROPOSTA GERADA
+━━━━━━━━━━━━━━━━━━━━
+Produto: ${p.produto?.nome||'—'}
+Valor: ${p.produto?.preco||'—'}
+
+01 — CONTEXTO
+${p.contexto||''}
+
+02 — PROPOSTA & JUSTIFICATIVA
+${p.proposta||''}
+
+03 — ENTREGÁVEIS
+${p.entregaveis||''}
+
+04 — INVESTIMENTO & ROI
+${p.investimento||''}
+
+05 — PRÓXIMO PASSO
+${p.cta||''}
+
+━━━━━━━━━━━━━━━━━━━━
+Ação recomendada: entrar em contato com ${d.nome||'o lead'} nas próximas 2 horas.
+Metodologia VÉRTICE — Crescimento Empresarial`;
+
+  window.location.href = `mailto:${cfg.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  showToast('E-mail do closer aberto');
+}
+
+function notificarCloser() {
+  const cfg = getCloserConfig();
+  const temConfig = cfg.whats || cfg.email;
+
+  // Move o banner para dentro do card da etapa 6
+  const slot = document.getElementById('banner-closer-slot');
+  const banner = document.getElementById('banner-closer');
+  if(slot && banner) { slot.appendChild(banner); }
+  banner.style.display = 'block';
+
+  const d = propostaGerada.dados || {};
+
+  const bannerInfo = document.getElementById('banner-closer-info');
+  if(!temConfig) {
+    bannerInfo.innerHTML = `<span style="color:#8B1A3A;font-weight:500">Configure o closer</span> clicando no botão "Closer" no topo para ativar os avisos automáticos.`;
+    return;
+  }
+
+  const canais = [cfg.whats?'WhatsApp':'', cfg.email?'e-mail':''].filter(Boolean).join(' e ');
+  bannerInfo.innerHTML = `Aviso enviado por <strong>${canais}</strong> com diagnóstico completo e dados de <strong>${d.nome||'lead'}</strong>. Use os botões ao lado para reenviar.`;
+
+  // Disparo automático com delay para não bloquear a renderização
+  setTimeout(()=>{ if(cfg.whats) notificarCloserWhats(); }, 1000);
+  setTimeout(()=>{ if(cfg.email) notificarCloserEmail(); }, 2200);
+}
+
+/* ═══════════════════════════════════════════════
+   SHARE — WHATSAPP
+═══════════════════════════════════════════════ */
+function shareWhatsApp() {
+  const d = propostaGerada.dados || {};
+  const p = propostaGerada;
+  const text = `*DIAGNÓSTICO VÉRTICE — ${d.empresa || 'Empresa'}*
+_Metodologia de Crescimento Empresarial_
+
+━━━━━━━━━━━━━━━━━━━━
+*📊 ÍNDICE DE MATURIDADE: ${p.media || '—'}/10*
+*⚠️ Pilar crítico: ${p.fraco || '—'}*
+━━━━━━━━━━━━━━━━━━━━
+
+*CONTEXTO*
+${p.contexto || ''}
+
+*PROPOSTA & JUSTIFICATIVA*
+${p.proposta || ''}
+
+*ENTREGÁVEIS*
+${p.entregaveis || ''}
+
+*INVESTIMENTO*
+${p.investimento || ''}
+
+*PRÓXIMO PASSO*
+${p.cta || ''}
+
+━━━━━━━━━━━━━━━━━━━━
+_Proposta gerada pela Metodologia VÉRTICE_`;
+
+  const numero = (d.whats||'').replace(/\D/g,'');
+  const url = numero
+    ? `https://wa.me/55${numero}?text=${encodeURIComponent(text)}`
+    : `https://wa.me/?text=${encodeURIComponent(text)}`;
+  window.open(url, '_blank');
+}
+
+/* ═══════════════════════════════════════════════
+   SHARE — E-MAIL
+═══════════════════════════════════════════════ */
+function shareEmail() {
+  const d = propostaGerada.dados || {};
+  const p = propostaGerada;
+  const subject = `Proposta VÉRTICE — ${d.empresa || 'Diagnóstico Empresarial'}`;
+  const body = `Olá ${d.nome || ''},
+
+Segue abaixo a proposta comercial personalizada com base no seu diagnóstico VÉRTICE.
+
+━━━━━━━━━━━━━━━━━━━━
+ÍNDICE DE MATURIDADE: ${p.media||'—'}/10 | Pilar crítico: ${p.fraco||'—'}
+━━━━━━━━━━━━━━━━━━━━
+
+01 — CONTEXTO
+${p.contexto||''}
+
+02 — PROPOSTA E JUSTIFICATIVA
+${p.proposta||''}
+
+03 — ENTREGÁVEIS
+${p.entregaveis||''}
+
+04 — INVESTIMENTO E ROI
+${p.investimento||''}
+
+05 — PRÓXIMO PASSO
+${p.cta||''}
+
+━━━━━━━━━━━━━━━━━━━━
+Metodologia VÉRTICE — Crescimento Empresarial`;
+
+  const mailto = `mailto:${d.email||''}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  window.location.href = mailto;
+}
+
+/* ═══════════════════════════════════════════════
+   SHARE — LINK
+═══════════════════════════════════════════════ */
+function shareLink() {
+  const s = getScores();
+  const d = getDados();
+  const p = propostaGerada;
+  const payload = {
+    n: d.nome, e: d.empresa, s: d.setor,
+    scores: PILARES.map(pl=>s[pl.id]||5),
+    media: p.media, fraco: p.fraco,
+    ctx: p.contexto, prop: p.proposta,
+    ent: p.entregaveis, inv: p.investimento, cta: p.cta
+  };
+  const encoded = btoa(encodeURIComponent(JSON.stringify(payload)));
+  const url = window.location.href.split('?')[0] + '?d=' + encoded;
+  navigator.clipboard.writeText(url).then(() => showToast('Link copiado para a área de transferência'));
+}
+
+/* ═══════════════════════════════════════════════
+   PDF
+═══════════════════════════════════════════════ */
+async function generatePDF() {
+  showToast('Gerando PDF...');
+  const d = propostaGerada.dados || {};
+  const p = propostaGerada;
+  const s = getScores();
+
+  const pdfDiv = document.getElementById('pdf-content');
+  pdfDiv.innerHTML = `
+    <div style="text-align:center;margin-bottom:40px;padding-bottom:28px;border-bottom:1px solid #DFC2C2">
+      <div style="font-size:28px;letter-spacing:0.28em;color:#8B1A3A;font-weight:300;margin-bottom:4px">VÉRTICE</div>
+      <div style="width:40px;height:1px;background:#C49A9A;margin:8px auto"></div>
+      <div style="font-size:9px;letter-spacing:0.2em;color:#C49A9A;text-transform:uppercase">Metodologia de Crescimento Empresarial</div>
+    </div>
+
+    <div style="margin-bottom:32px">
+      <div style="font-size:9px;letter-spacing:0.15em;color:#C49A9A;text-transform:uppercase;margin-bottom:6px">Diagnóstico & Proposta Comercial</div>
+      <div style="font-size:22px;color:#8B1A3A;font-weight:300;margin-bottom:2px">${d.nome || ''}</div>
+      <div style="font-size:13px;color:#7A4A4A">${d.empresa || ''} · ${d.setor || ''}</div>
+      <div style="font-size:11px;color:#C49A9A;margin-top:4px">${d.fat||''} · ${d.colab||''} colaboradores · ${d.tempo||''}</div>
+      <div style="font-size:11px;color:#C49A9A;margin-top:2px">${d.whats||''} ${d.email?'· '+d.email:''}</div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin-bottom:28px">
+      ${[
+        {v:p.media+'/10', l:'Índice de maturidade'},
+        {v:p.fraco, l:'Pilar crítico'},
+        {v:p.produto?.nome?.split('—')[0]?.trim()||'—', l:'Programa selecionado'},
+        {v:p.produto?.preco||'—', l:'Investimento'}
+      ].map(m=>`<div style="background:#F2EAE4;border:1px solid #DFC2C2;padding:12px;text-align:center">
+        <div style="font-size:16px;color:#8B1A3A;font-weight:400">${m.v||'—'}</div>
+        <div style="font-size:9px;color:#7A4A4A;margin-top:3px;text-transform:uppercase;letter-spacing:0.08em">${m.l}</div>
+      </div>`).join('')}
+    </div>
+
+    ${[
+      {n:'01', t:'Contexto', c:p.contexto},
+      {n:'02', t:'Proposta e Justificativa', c:p.proposta},
+      {n:'03', t:'Entregáveis', c:p.entregaveis},
+      {n:'04', t:'Investimento e ROI', c:p.investimento},
+      {n:'05', t:'Próximo Passo', c:p.cta}
+    ].map(b=>`
+      <div style="margin-bottom:24px">
+        <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:6px">
+          <span style="font-size:22px;color:#DFC2C2;font-weight:300">${b.n}</span>
+          <span style="font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:#8B1A3A;font-weight:600">${b.t}</span>
+        </div>
+        <div style="height:1px;background:linear-gradient(90deg,#8B1A3A,transparent);margin-bottom:10px"></div>
+        <div style="font-size:12px;line-height:1.8;color:#3D1A1A;white-space:pre-wrap">${b.c||''}</div>
+      </div>`).join('')}
+
+    <div style="margin-top:40px;padding-top:20px;border-top:1px solid #DFC2C2;text-align:center;font-size:9px;color:#C49A9A;letter-spacing:0.12em">
+      VÉRTICE · METODOLOGIA DE CRESCIMENTO EMPRESARIAL · ${new Date().getFullYear()}
+    </div>`;
+
+  const report = document.getElementById('pdf-report');
+  report.style.display = 'block';
+
+  try {
+    const { jsPDF } = window.jspdf;
+    const canvas = await html2canvas(pdfDiv, { scale:2, useCORS:true, backgroundColor:'#FDFAF8' });
+    const imgData = canvas.toDataURL('image/jpeg', 0.92);
+    const pdf = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
+    const pgW = pdf.internal.pageSize.getWidth();
+    const pgH = pdf.internal.pageSize.getHeight();
+    const ratio = canvas.height / canvas.width;
+    const imgH = pgW * ratio;
+    let yPos = 0;
+    let remaining = imgH;
+    while(remaining > 0) {
+      if(yPos > 0) pdf.addPage();
+      const srcY = (yPos / imgH) * canvas.height;
+      const sliceH = Math.min(pgH / imgH * canvas.height, canvas.height - srcY);
+      const sliceCanvas = document.createElement('canvas');
+      sliceCanvas.width = canvas.width;
+      sliceCanvas.height = sliceH;
+      sliceCanvas.getContext('2d').drawImage(canvas, 0, srcY, canvas.width, sliceH, 0, 0, canvas.width, sliceH);
+      pdf.addImage(sliceCanvas.toDataURL('image/jpeg',0.92), 'JPEG', 0, 0, pgW, pgW*(sliceH/canvas.width));
+      yPos += pgH;
+      remaining -= pgH;
+    }
+    pdf.save(`VERTICE_Diagnostico_${(d.empresa||'proposta').replace(/\s/g,'_')}.pdf`);
+    showToast('PDF baixado com sucesso');
+  } catch(err) {
+    // Fallback: print
+    window.print();
+    showToast('Use Ctrl+P para salvar como PDF');
+  }
+  report.style.display = 'none';
+}
+
+/* ═══════════════════════════════════════════════
+   SHARED LINK — LOAD ON START
+═══════════════════════════════════════════════ */
+function loadFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  const data = params.get('d');
+  if(!data) return;
+  try {
+    const payload = JSON.parse(decodeURIComponent(atob(data)));
+    // Pre-fill fields
+    if(payload.n) document.getElementById('f_nome').value = payload.n;
+    if(payload.e) document.getElementById('f_empresa').value = payload.e;
+    if(payload.s) document.getElementById('f_setor').value = payload.s;
+    // Pre-fill scores
+    if(payload.scores) {
+      PILARES.forEach((p,i)=>{ if(payload.scores[i]) scores[p.id]=payload.scores[i]; });
+    }
+    // Pre-fill proposta
+    if(payload.ctx) {
+      propostaGerada = {
+        contexto: payload.ctx, proposta: payload.prop,
+        entregaveis: payload.ent, investimento: payload.inv,
+        cta: payload.cta, media: payload.media, fraco: payload.fraco,
+        dados: { nome:payload.n, empresa:payload.e, setor:payload.s }
+      };
+      // Go directly to proposal
+      goStep(6, true);
+    }
+  } catch(e) { console.log('Link inválido'); }
+}
+
+/* ═══════════════════════════════════════════════
+   TOAST
+═══════════════════════════════════════════════ */
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2800);
+}
+
+/* ═══════════════════════════════════════════════
+   RESET
+═══════════════════════════════════════════════ */
+function resetAll() {
+  scores = {};
+  propostaGerada = {};
+  document.querySelectorAll('input[type=text],input[type=email],input[type=tel],textarea').forEach(el=>el.value='');
+  document.querySelectorAll('select').forEach(el=>el.selectedIndex=0);
+  ['ai-loading','proposta-loading'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.classList.remove('hidden');
+  });
+  ['ai-analysis-text','products-section','step5-btns','proposta-content'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.classList.add('hidden');
+  });
+  document.getElementById('proposta-loading-block').classList.remove('hidden');
+}
+
+/* ═══════════════════════════════════════════════
+   NAVEGAÇÃO
+═══════════════════════════════════════════════ */
+function goStep(n, skipAI) {
+  for(let i=1;i<=6;i++) {
+    const el = document.getElementById('step'+i);
+    if(el) el.classList.toggle('hidden', i!==n);
+  }
+  buildProgress(n);
+  if(n===2) buildPilares();
+  if(n===4) buildDiagnostico();
+  if(n===5 && !skipAI) runAIAnalysis();
+  if(n===6 && !skipAI) runProposta();
+  if(n===6 && skipAI && propostaGerada.contexto) {
+    // Load from URL
+    document.getElementById('prop-contexto').textContent    = propostaGerada.contexto;
+    document.getElementById('prop-recomendacao').textContent= propostaGerada.proposta;
+    document.getElementById('prop-entregaveis').textContent = propostaGerada.entregaveis;
+    document.getElementById('prop-investimento').textContent= propostaGerada.investimento;
+    document.getElementById('prop-cta').textContent         = propostaGerada.cta;
+    document.getElementById('proposta-loading-block').classList.add('hidden');
+    document.getElementById('proposta-content').classList.remove('hidden');
+  }
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+/* ─── INIT ─── */
+buildProgress(1);
+buildPilares();
+window.addEventListener('load', loadFromURL);
+
+// Fecha modal ao clicar fora
+document.getElementById('modal-closer').addEventListener('click', function(e){
+  if(e.target === this) fecharModal();
+});
+</script>
+</body>
+</html>
